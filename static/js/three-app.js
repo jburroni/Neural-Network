@@ -755,12 +755,12 @@
 						}
 
 						else if(rand === 2){
-							var connectedAxon = n1.connectNeuronOneDirection(n2);
+							var connectedAxon = n2.connectNeuronOneDirection(n1);
 							this.constructAxonArrayBuffer(connectedAxon);
 							var rand = (Math.random()*41+80)/100;
 							connectedAxon.weight = rand * (1/connectedAxon.cpLength);
-							constring = j.toString().concat(",").concat(k).concat(",1\n");
-							wstring = j.toString().concat(",").concat(k).concat(",").concat(connectedAxon.weight).concat("\n");
+							constring = k.toString().concat(",").concat(j).concat(",1\n");
+							wstring = k.toString().concat(",").concat(j).concat(",").concat(connectedAxon.weight).concat("\n");
 							this.connections.push(constring);
 							this.connWeight.push(wstring);
 						}
@@ -768,12 +768,12 @@
 					}
 					
 				}
-				for (i=0; i < this.connections.length; i++){
+				if(this.connections.length > 100){
 					$.ajax({
 					 	type: "POST",
 					 	url: "/connection",
 					  	contentType: "application/json; charset=utf-8",
-					  	data: JSON.stringify(this.connections[i]),
+					  	data: JSON.stringify(this.connections),
 					  	dataType: 'json',
 					  	success: function(data) {
 					  		console.log("success");
@@ -782,11 +782,11 @@
 					  		console.log(error);
 					  	}
 					});
-					/*$.ajax({
+					$.ajax({
 					 	type: "POST",
 					 	url: "/conweights",
 					  	contentType: "application/json; charset=utf-8",
-					  	data: JSON.stringify(this.connWeight[i]),
+					  	data: JSON.stringify(this.connWeight),
 					  	dataType: 'json',
 					  	success: function(data) {
 					  		console.log("success");
@@ -794,13 +794,43 @@
 					  	error: function(error) {
 					  		console.log(error);
 					  	}
-					});*/
+					});
+					this.connections = [];
+					this.connWeight = [];
 				}
+			}
+			if(this.connections.length > 0){
+				$.ajax({
+				 	type: "POST",
+				 	url: "/connection",
+				  	contentType: "application/json; charset=utf-8",
+				  	data: JSON.stringify(this.connections),
+				  	dataType: 'json',
+				  	success: function(data) {
+				  		console.log("success");
+				  	},
+				  	error: function(error) {
+				  		console.log(error);
+				  	}
+				});
+				$.ajax({
+				 	type: "POST",
+				 	url: "/conweights",
+				  	contentType: "application/json; charset=utf-8",
+				  	data: JSON.stringify(this.connWeight),
+				  	dataType: 'json',
+				  	success: function(data) {
+				  		console.log("success");
+				  	},
+				  	error: function(error) {
+				  		console.log(error);
+				  	}
+				});
 				this.connections = [];
 				this.connWeight = [];
 			}
 			
-			$.ajax({
+			/*$.ajax({
 			 	type: "POST",
 			 	url: "/c_close",
 			  	contentType: "application/json; charset=utf-8",
@@ -812,7 +842,7 @@
 			  	error: function(error) {
 			  		console.log(error);
 			  	}
-			});
+			});*/
 			/*$.ajax({
 			 	type: "POST",
 			 	url: "/cw_close",

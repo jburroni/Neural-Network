@@ -22,17 +22,19 @@ def log():
 @app.route('/connection', methods=['POST'])
 def logConnections():
     log = request.get_json()
-    if(fileC == None):
-    	openFC()
-    writeCon(fileC, log)
+    #if(fileC == None):
+    	#openFC()
+    #writeCon(fileC, log)
+    writeCon(confile, log)
     return "success"
 
 @app.route('/conweights', methods=['POST'])
 def logWeights():
     log = request.get_json()
-    if(fileCW == None):
-    	openFCW()
-    writeCon(fileCW, log)
+    #if(fileCW == None):
+    	#openFCW()
+    #writeCon(fileCW, log)
+    writeCon(conwfile, log)
     return "success"
 
 @app.route('/c_close', methods=['POST'])
@@ -63,9 +65,14 @@ def write(logList):
 	logfile.close()
 
 def writeCon(openFile, data):
-	logfile = openFile
-	logfile.write(data)
+	logfile = open(openFile, 'a')
+	#logfile = openFile
+	#logfile.write(data)
+	for entry in data:
+		logfile.write(entry)
+	del data[:]
 	logfile.close()
+	
 
 if __name__ == '__main__':
     app.run(port=8080, debug=True)
