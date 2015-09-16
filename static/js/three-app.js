@@ -649,6 +649,20 @@
 			self.decayFunction();
 
 		}); // end of loader
+		
+		$.ajax({
+		 	type: "POST",
+		 	url: "/createLogs",
+		  	contentType: "application/json; charset=utf-8",
+		  	data: JSON.stringify("Create the logs"),
+		  	dataType: 'json',
+		  	success: function(data) {
+		  		console.log("success");
+		  	},
+		  	error: function(error) {
+		  		console.log(error);
+		  	}
+		});
 
 	};
 
@@ -732,12 +746,12 @@
 							this.constructAxonArrayBuffer(connectedAxon);
 							var rand = (Math.random()*41+80)/100;
 							connectedAxon.weight = rand * (1/connectedAxon.cpLength);
-							constring = j.toString().concat(",").concat(k).concat(",1\n");
-							wstring = j.toString().concat(",").concat(k).concat(",").concat(connectedAxon.weight).concat("\n");
+							constring = (j+1).toString().concat(",").concat((k+1)).concat(",1\n");
+							wstring = (j+1).toString().concat(",").concat((k+1)).concat(",").concat(connectedAxon.weight).concat("\n");
 							this.connections.push(constring);
 							this.connWeight.push(wstring);
-							constring = k.toString().concat(",").concat(j).concat(",1\n");
-							wstring = k.toString().concat(",").concat(j).concat(",").concat(connectedAxon.weight).concat("\n");
+							constring = (k+1).toString().concat(",").concat((j+1)).concat(",1\n");
+							wstring = (k+1).toString().concat(",").concat((j+1)).concat(",").concat(connectedAxon.weight).concat("\n");
 							this.connections.push(constring);
 							this.connWeight.push(wstring);
 						}
@@ -747,8 +761,8 @@
 							this.constructAxonArrayBuffer(connectedAxon);
 							var rand = (Math.random()*41+80)/100;
 							connectedAxon.weight = rand * (1/connectedAxon.cpLength);
-							constring = j.toString().concat(",").concat(k).concat(",1\n");
-							wstring = j.toString().concat(",").concat(k).concat(",").concat(connectedAxon.weight).concat("\n");
+							constring = (j+1).toString().concat(",").concat((k+1)).concat(",1\n");
+							wstring = (j+1).toString().concat(",").concat((k+1)).concat(",").concat(connectedAxon.weight).concat("\n");
 							this.connections.push(constring);
 							this.connWeight.push(wstring);
 
@@ -759,8 +773,8 @@
 							this.constructAxonArrayBuffer(connectedAxon);
 							var rand = (Math.random()*41+80)/100;
 							connectedAxon.weight = rand * (1/connectedAxon.cpLength);
-							constring = k.toString().concat(",").concat(j).concat(",1\n");
-							wstring = k.toString().concat(",").concat(j).concat(",").concat(connectedAxon.weight).concat("\n");
+							constring = (k+1).toString().concat(",").concat((j+1)).concat(",1\n");
+							wstring = (k+1).toString().concat(",").concat((j+1)).concat(",").concat(connectedAxon.weight).concat("\n");
 							this.connections.push(constring);
 							this.connWeight.push(wstring);
 						}
@@ -829,34 +843,7 @@
 				this.connections = [];
 				this.connWeight = [];
 			}
-			
-			/*$.ajax({
-			 	type: "POST",
-			 	url: "/c_close",
-			  	contentType: "application/json; charset=utf-8",
-			  	data: JSON.stringify("close connection file"),
-			  	dataType: 'json',
-			  	success: function(data) {
-			  		console.log("success");
-			  	},
-			  	error: function(error) {
-			  		console.log(error);
-			  	}
-			});*/
-			/*$.ajax({
-			 	type: "POST",
-			 	url: "/cw_close",
-			  	contentType: "application/json; charset=utf-8",
-			  	data: JSON.stringify("close connection weight file"),
-			  	dataType: 'json',
-			  	success: function(data) {
-			  		console.log("success");
-			  	},
-			  	error: function(error) {
-			  		console.log(error);
-			  	}
-			});*/
-			
+						
 			// *** attirbute size must bigger than its content ***
 			var axonIndices = new Uint32Array(this.axonIndices.length);
 			var axonPositions = new Float32Array(this.axonPositions.length);
@@ -924,7 +911,7 @@
 					// n.lastSignalRelease = currentTime;
 					// n.releaseDelay = THREE.Math.randInt(100, 1000);
 					if (n.fire() === true) {
-						this.logger.addToLastEntry(ii);
+						this.logger.addToLastEntry(ii+1);
 						a.deplete();
 						n.lastSignalRelease = currentTime;
 						this.releaseSignalAt(n);
