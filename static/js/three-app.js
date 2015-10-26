@@ -417,7 +417,8 @@
 	}
 	
 	// Logger ----------------------------------------------------------------
-	function Logger(){
+	function Logger(url){
+		this.url = url;
 		this.entries = [];
 		this.entries.push("1");
 		this.lastEntry = 0;
@@ -441,7 +442,7 @@
 		this.entries[this.lastEntry] = this.entries[this.lastEntry].concat("\n");
 		$.ajax({
 		 	type: "POST",
-		 	url: "/logging",
+		 	url: "/"+this.url,
 		  	contentType: "application/json; charset=utf-8",
 		  	data: JSON.stringify(this.entries),
 		  	dataType: 'json',
@@ -461,7 +462,8 @@
 
 	function NeuralNetwork() {
 		this.initialized = false;
-		this.logger = new Logger();
+		this.logger = new Logger("firing");
+		this.logger2 = new Logger("potential");
 		this.numberExcite = 0;
 		this.numberInhibit = 0;
 		this.connections = [];
@@ -912,6 +914,7 @@
 					// n.releaseDelay = THREE.Math.randInt(100, 1000);
 					if (n.fire() === true) {
 						this.logger.addToLastEntry(ii+1);
+						this.logger2.addToLastEntry(n.acc+0.125);
 						a.deplete();
 						n.lastSignalRelease = currentTime;
 						this.releaseSignalAt(n);
@@ -930,7 +933,9 @@
 		}
 		if(this.logger.getLastEntry() >= 19){
 			this.logger.sendToServer();
+			this.logger2.sendToServer();
 		} else {
+			this.logger2.newEntry();
 			this.logger.newEntry();
 		}
 		// reset all neurons and when there is X signal

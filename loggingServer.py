@@ -8,11 +8,16 @@ class logserver:
 	
 
 	firefile = ""
+	potfile = ""
 	confile = ""
 	conwfile = ""
 	
 	def logFiring(self, log):
 		self.writeLog(self.firefile, log)
+		return "success"
+
+	def logPot(self, log):
+		self.writeLog(self.potfile, log)
 		return "success"
 	
 	def logConnection(self, log):
@@ -36,14 +41,18 @@ class logserver:
 		conpath = os.path.normpath(os.path.join(logpath, 'Connections'))
 		conwpath = os.path.normpath(os.path.join(logpath, 'ConWeights'))
 		firepath = os.path.normpath(os.path.join(logpath, 'Firing'))
+		potpath = os.path.normpath(os.path.join(logpath, 'Potential'))
 	
 		timestampstr = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 	
 		self.firefile = os.path.join(firepath, timestampstr)
+		self.potfile = os.path.join(potpath, timestampstr)
 		self.confile  = os.path.join(conpath, timestampstr)
 		self.conwfile = os.path.join(conwpath, timestampstr)
 
 		lfile = open(self.firefile, 'w')
+		lfile.close()
+		lfile = open(self.potfile, 'w')
 		lfile.close()
 		lfile = open(self.confile, 'w')
 		lfile.close()
@@ -59,10 +68,15 @@ logserv = logserver()
 def index():
 	return render_template('index.html')
 	
-@app.route('/logging', methods=['POST'])
-def log():
+@app.route('/firing', methods=['POST'])
+def logFiring():
 	log = request.get_json()
 	logserv.logFiring(log)
+	return "success"
+@app.route('/potential', methods=['POST'])
+def logPotential():
+	log = request.get_json()
+	logserv.logPot(log)
 	return "success"
 
 @app.route('/connection', methods=['POST'])
